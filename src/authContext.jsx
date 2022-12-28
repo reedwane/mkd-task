@@ -1,4 +1,5 @@
 import React, { useReducer } from "react";
+import { useState } from "react";
 import MkdSDK from "./utils/MkdSDK";
 
 export const AuthContext = React.createContext();
@@ -51,6 +52,7 @@ export const tokenExpireError = (dispatch, errorMessage) => {
 
 const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [loading, setLoading] = useState(true);
 
   React.useEffect(() => {
     //TODO
@@ -69,8 +71,10 @@ const AuthProvider = ({ children }) => {
           }
         } catch (error) {
           tokenExpireError(dispatch, "TOKEN_EXPIRED");
+        } finally {
+          setLoading(false);
         }
-      }
+      } else setLoading(false);
     })();
   }, []);
 
@@ -81,7 +85,7 @@ const AuthProvider = ({ children }) => {
         dispatch,
       }}
     >
-      {children}
+      {loading ? <div /> : children}
     </AuthContext.Provider>
   );
 };
