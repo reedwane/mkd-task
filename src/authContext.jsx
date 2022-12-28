@@ -14,9 +14,17 @@ const reducer = (state, action) => {
   switch (action.type) {
     case "LOGIN":
       //TODO
+      const user = action.payload.user;
+      localStorage.setItem("role", user?.role);
+      localStorage.setItem("token", user?.token);
       return {
         ...state,
+        isAuthenticated: true,
+        user: user?.user_id,
+        token: user?.token,
+        role: user?.role,
       };
+
     case "LOGOUT":
       localStorage.clear();
       return {
@@ -35,7 +43,7 @@ export const tokenExpireError = (dispatch, errorMessage) => {
   const role = localStorage.getItem("role");
   if (errorMessage === "TOKEN_EXPIRED") {
     dispatch({
-      type: "Logout",
+      type: "LOGOUT",
     });
     window.location.href = "/" + role + "/login";
   }
@@ -46,6 +54,24 @@ const AuthProvider = ({ children }) => {
 
   React.useEffect(() => {
     //TODO
+    (async () => {
+      const role = localStorage.getItem("role");
+
+      if (role) {
+        try {
+          const check = await sdk.check(role);
+
+          if (!check.error) {
+            const user = JSON.parse(localStorage.getItem("userData"));
+            dispatch({ type: "LOGIN", payload: { user } });
+          } else {
+            tokenExpireError(dispatch, "TOKEN_EXPIRED");
+          }
+        } catch (error) {
+          tokenExpireError(dispatch, "TOKEN_EXPIRED");
+        }
+      }
+    })();
   }, []);
 
   return (

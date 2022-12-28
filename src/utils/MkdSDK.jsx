@@ -33,6 +33,7 @@ export default function MkdSDK() {
       throw new Error(userData.message);
     }
 
+    localStorage.setItem("userData", JSON.stringify(userData));
     return userData;
   };
 
@@ -107,6 +108,27 @@ export default function MkdSDK() {
 
   this.check = async function (role) {
     //TODO
+
+    const header = {
+      "Content-Type": "application/json",
+      "x-project":
+        "cmVhY3R0YXNrOmQ5aGVkeWN5djZwN3p3OHhpMzR0OWJtdHNqc2lneTV0Nw==",
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    };
+
+    const validate = await fetch(this._baseurl + `/v2/api/lambda/check`, {
+      method: "post",
+      headers: header,
+      body: JSON.stringify({ role }),
+    });
+
+    const response = await validate.json();
+
+    if (validate.status !== 200) {
+      throw new Error(response.message);
+    }
+
+    return response;
   };
 
   return this;

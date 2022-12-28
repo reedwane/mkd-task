@@ -22,6 +22,10 @@ function renderRoutes(role) {
       return (
         <Routes>
           <Route exact path="/admin/login" element={<AdminLoginPage />}></Route>
+          <Route
+            path="/admin/dashboard"
+            render={() => <Navigate to="/admin/login" />}
+          ></Route>
           <Route path="*" exact element={<NotFoundPage />}></Route>
         </Routes>
       );
