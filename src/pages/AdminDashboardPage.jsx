@@ -82,7 +82,7 @@ const AdminDashboardPage = () => {
 
           {data.length ? (
             <div>
-              <DataMap data={data} />
+              <DataMap data={data} setData={(value) => setData(value)} />
 
               <div className="flex gap-4 items-center justify-center text-base m-6">
                 <button
