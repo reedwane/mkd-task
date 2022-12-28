@@ -12,9 +12,28 @@ export default function MkdSDK() {
   this.setTable = function (table) {
     this._table = table;
   };
-  
+
   this.login = async function (email, password, role) {
     //TODO
+    const header = {
+      "Content-Type": "application/json",
+      "x-project":
+        "cmVhY3R0YXNrOmQ5aGVkeWN5djZwN3p3OHhpMzR0OWJtdHNqc2lneTV0Nw==",
+    };
+
+    const signIn = await fetch(this._baseurl + `/v2/api/lambda/login`, {
+      method: "post",
+      headers: header,
+      body: JSON.stringify({ email, password, role }),
+    });
+
+    const userData = await signIn.json();
+
+    if (signIn.status === 401 || signIn.status === 403) {
+      throw new Error(userData.message);
+    }
+
+    return userData;
   };
 
   this.getHeader = function () {
@@ -27,7 +46,7 @@ export default function MkdSDK() {
   this.baseUrl = function () {
     return this._baseurl;
   };
-  
+
   this.callRestAPI = async function (payload, method) {
     const header = {
       "Content-Type": "application/json",
@@ -55,7 +74,7 @@ export default function MkdSDK() {
           throw new Error(jsonGet.message);
         }
         return jsonGet;
-      
+
       case "PAGINATE":
         if (!payload.page) {
           payload.page = 1;
@@ -84,7 +103,7 @@ export default function MkdSDK() {
       default:
         break;
     }
-  };  
+  };
 
   this.check = async function (role) {
     //TODO
