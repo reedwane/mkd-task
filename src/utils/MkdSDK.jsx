@@ -2,12 +2,13 @@ export default function MkdSDK() {
   this._baseurl = "https://reacttask.mkdlabs.com";
   this._project_id = "reacttask";
   this._secret = "d9hedycyv6p7zw8xi34t9bmtsjsigy5t7";
-  this._table = "";
+  this._table = "video";
   this._custom = "";
   this._method = "";
 
   const raw = this._project_id + ":" + this._secret;
   let base64Encode = btoa(raw);
+  let secret = "cmVhY3R0YXNrOmQ5aGVkeWN5djZwN3p3OHhpMzR0OWJtdHNqc2lneTV0Nw==";
 
   this.setTable = function (table) {
     this._table = table;
@@ -40,7 +41,7 @@ export default function MkdSDK() {
   this.getHeader = function () {
     return {
       Authorization: "Bearer " + localStorage.getItem("token"),
-      "x-project": base64Encode,
+      "x-project": secret,
     };
   };
 
@@ -114,7 +115,7 @@ export default function MkdSDK() {
       "x-project":
         "cmVhY3R0YXNrOmQ5aGVkeWN5djZwN3p3OHhpMzR0OWJtdHNqc2lneTV0Nw==",
       Authorization: "Bearer " + localStorage.getItem("token"),
-    };
+    }; // reuse header function
 
     const validate = await fetch(this._baseurl + `/v2/api/lambda/check`, {
       method: "post",

@@ -15,6 +15,7 @@ function renderRoutes(role) {
             path="/admin/dashboard"
             element={<AdminDashboardPage />}
           ></Route>
+          <Route path="/admin/login" element={<AdminLoginPage />}></Route>
         </Routes>
       );
       break;
@@ -24,7 +25,7 @@ function renderRoutes(role) {
           <Route exact path="/admin/login" element={<AdminLoginPage />}></Route>
           <Route
             path="/admin/dashboard"
-            render={() => <Navigate to="/admin/login" />}
+            element={<Navigate to="/admin/login" />}
           ></Route>
           <Route path="*" exact element={<NotFoundPage />}></Route>
         </Routes>
